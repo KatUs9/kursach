@@ -1,0 +1,64 @@
+---
+import Login from "../components/login";
+import Register from "../components/register";
+import Donate from "../components/donate";
+
+import { getSession } from "@/lib/get-session";
+
+const session = await getSession(Astro.cookies);
+---
+
+<!-- Интерфейсно подобная штука -->
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="description" content="Приют лапка" />
+    <meta name="viewport" content="width=device-width" />
+    <link rel="icon" type="image/svg+xml" href="/main.png" />
+    <title>Приют Лапка</title>
+  </head>
+  <body class="text-gray bg-white">
+    <header class="bg-gray text-white">
+      <div
+        class="flex items-center justify-between max-w-screen-xl mx-auto px-4 py-3"
+      >
+        <a href="/">
+          <h1 class="flex gap-2 items-center font-bold text-2xl">
+            <img src="/main.png" alt="Логотип Приюта Лапка" />
+            <span>Приют лапка</span>
+          </h1>
+        </a>
+        <Donate client:load />
+        <div class="flex gap-2">
+          {
+            session ? (
+              <>
+                {session.isAdmin ? (
+                  <a href="/sql" class="bg-green px-3 py-2 text-white">
+                    SQL
+                  </a>
+                ) : null}
+                {session.isAdmin ? (
+                  <a href="/add-pet" class="bg-green px-3 py-2 text-white">
+                    Добавить питомца
+                  </a>
+                ) : null}
+                <form action="/log-out" method="POST">
+                  <button class="bg-green px-3 py-2 text-white"> Выйти</button>
+                </form>
+              </>
+            ) : (
+              <>
+                <Register client:load />
+                <Login client:load />
+              </>
+            )
+          }
+        </div>
+      </div>
+    </header>
+    <main class="mx-auto max-w-screen-xl px-4 py-6">
+      <slot />
+    </main>
+  </body>
+</html>

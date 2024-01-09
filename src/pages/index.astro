@@ -1,0 +1,101 @@
+---
+import Layout from "../layouts/layout.astro";
+import dayjs from "dayjs";
+import { db } from "@/lib/db";
+import { pets, images, reservations } from "db/schema";
+import { eq } from "drizzle-orm";
+
+const dbPets = await db
+  .select()
+  .from(pets)
+  .innerJoin(images, eq(pets.imageId, images.id))
+  .leftJoin(reservations, eq(pets.id, reservations.petId));
+
+function renderPetType(pet: typeof pets.$inferSelect) {
+  switch (true) {
+    case pet.gender == "female" && pet.type == "cat":
+      return "Кошечка";
+    case pet.gender == "female" && pet.type == "dog":
+      return "Собачка";
+    case pet.gender == "male" && pet.type == "cat":
+      return "Котик";
+    case pet.gender == "male" && pet.type == "dog":
+      return "Пес";
+  }
+}
+
+function renderPetAge(pet: typeof pets.$inferSelect) {
+  const now = Date.now();
+
+  const years = dayjs(now).diff(pet.birthDate, "years");
+  const months = dayjs(now).diff(pet.birthDate, "months");
+
+  const renderedYears =
+    years > 0 ? `${years} ${declination(years, ["год", "года", "лет"])}` : "";
+  const renderedMonths =
+    months > 0
+      ? `${months} ${declination(months, ["месяц", "месяца", "месяцев"])}`
+      : "";
+
+  if (renderedYears != "") {
+    return `${renderedYears} и ${renderedMonths}`;
+  }
+
+  return renderedMonths;
+}
+
+function declination(n: number, titles: string[]) {
+  const cases = [2, 0, 1, 1, 1, 2];
+
+  return titles[
+    n % 100 > 4 && n % 100 < 20 ? 2 : cases[n % 10 < 5 ? n % 10 : 5]
+  ];
+}
+---
+
+<Layout>
+  <center>
+    <img src="ni.png" width="800" height="400" alt="Животные" />
+  </center>
+  <p class="text-center mx-40">
+    Добро пожаловать в наш приют! Мы — место, где забота встречается с надеждой.
+    Наш приют предоставляет временный дом для бездомных животных, обеспечивая им
+    любовь, уход и возможность найти постоянные заботливые семьи. Мы стремимся
+    создать безопасное пространство, где каждое животное может найти свой уголок
+    счастья и навсегда изменить свою жизнь. Познакомьтесь с нашими пушистыми
+    подопечными и станьте частью нашей истории любви и спасения.
+  </p>
+  <hr class="border-none py-4" />
+  <ul class="grid grid-cols-2 gap-8 justify-items-center">
+    {
+      dbPets.map(({ pets: pet, images: image, reservations }) => (
+        <li class="flex gap-3 items-center">
+          <img
+            src={`api/image/${image.filename}`}
+            alt="Фото животного"
+            loading="lazy"
+            decoding="async"
+            class="rounded-full border-2 border-pink w-[200px] h-[200px] object-cover flex-shrink-0"
+          />
+          <div class="flex flex-col gap-3">
+            <p>
+              {renderPetType(pet)} <b>{pet.name}</b>. <br />
+              Возраст: {renderPetAge(pet)}. <br />
+              {pet.description}
+            </p>
+            {reservations ? (
+              <p class="text-green font-bold">Забронирован.</p>
+            ) : (
+              <a
+                href={`/reserve/${pet.id}`}
+                class="bg-green text-white px-2 py-2 flex justify-center"
+              >
+                Забронировать визит
+              </a>
+            )}
+          </div>
+        </li>
+      ))
+    }
+  </ul>
+</Layout>

@@ -1,0 +1,34 @@
+---
+import Layout from "@/layouts/layout.astro";
+---
+
+<Layout>
+  <form
+    action="/api/pets"
+    method="POST"
+    enctype="multipart/form-data"
+    class="flex flex-col gap-4"
+  >
+    <select name="gender" required>
+      <option value="male">Мальчик</option>
+      <option value="female">Девочка</option>
+    </select>
+
+    <select name="type" required>
+      <option value="dog">Собака</option>
+      <option value="cat">Кот</option>
+    </select>
+
+    <input name="name" placeholder="Кличка" required />
+
+    <input name="birthDate" type="datetime-local" required />
+
+    <input name="image" type="file" required />
+
+    <textarea name="description" placeholder="Описание" required></textarea>
+
+    <button type="submit" class="bg-green px-3 py-2 text-white">
+      Добавить
+    </button>
+  </form>
+</Layout>

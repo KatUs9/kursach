@@ -1,0 +1,73 @@
+---
+import Layout from "@/layouts/layout.astro";
+import { db } from "@/lib/db";
+import { buildErrorResponse } from "@/lib/response";
+import { DrizzleError, sql } from "drizzle-orm";
+
+let executionResult:
+  | {
+      success: true;
+      columns: string[];
+      data: unknown[];
+    }
+  | { success: false; message: string }
+  | undefined;
+
+if (Astro.request.method == "POST") {
+  const formData = await Astro.request.formData();
+
+  const query = formData.get("really-safe-to-sql-injection-query");
+
+  if (typeof query != "string") {
+    return buildErrorResponse("Invalid form data", 400);
+  }
+
+  try {
+    const rows = await db.execute(sql.raw(query));
+
+    executionResult = {
+      success: true,
+      columns: Object.keys(rows[0]),
+      data: rows.map((row) => Object.values(row))
+    };
+  } catch (error) {
+    if (error instanceof DrizzleError) {
+      executionResult = {
+        success: false,
+        message: error.message
+      };
+    }
+
+    throw error;
+  }
+}
+
+console.log(executionResult);
+---
+
+<Layout>
+  {
+    executionResult == undefined ? (
+      <form action="/sql" method="POST" class="flex flex-col gap-2">
+        <textarea
+          placeholder="Введите ваш SQL запрос"
+          class="w-full"
+          name="really-safe-to-sql-injection-query"
+        />
+        <button class="bg-green px-3 py-2 text-white" type="submit">
+          Выполнить
+        </button>
+      </form>
+    ) : executionResult.success ? (
+      <table>
+        <thead>
+          {executionResult.columns.map((column) => (
+            <th>{column}</th>
+          ))}
+        </thead>
+      </table>
+    ) : (
+      <p>{executionResult.message}</p>
+    )
+  }
+</Layout>

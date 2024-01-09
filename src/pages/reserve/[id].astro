@@ -1,0 +1,37 @@
+---
+import Layout from "@/layouts/layout.astro";
+import { db } from "@/lib/db";
+import { getSession } from "@/lib/get-session";
+import { pets, reservations } from "db/schema";
+import { eq } from "drizzle-orm";
+
+const petId = Number(Astro.params.id!);
+
+if (isNaN(petId)) {
+  return new Response(null, { status: 404 });
+}
+
+const session = await getSession(Astro.cookies);
+
+const dbPets = await db.select().from(pets).where(eq(pets.id, petId));
+const pet = dbPets[0];
+
+if (!pet) {
+  return new Response(null, { status: 404 });
+}
+
+if (session) {
+  await db.insert(reservations).values({
+    petId,
+    userId: session.id
+  });
+}
+---
+
+<Layout>
+  {
+    session
+      ? "Питомец забронирован. Мы вам перезвоним!"
+      : "Вы не авторизованы. Для бронирования зарегистрируйтесь или войдите в свой аккаунт."
+  }
+</Layout>

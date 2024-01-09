@@ -1,0 +1,34 @@
+{
+  "version": "5",
+  "dialect": "pg",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "5",
+      "when": 1704554220704,
+      "tag": "0000_wide_thunderball",
+      "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "5",
+      "when": 1704643867407,
+      "tag": "0001_clean_shadow_king",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "5",
+      "when": 1704645168831,
+      "tag": "0002_uneven_silverclaw",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "5",
+      "when": 1704646679948,
+      "tag": "0003_faithful_spirit",
+      "breakpoints": true
+    }
+  ]
+}

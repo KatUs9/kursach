@@ -1,0 +1,32 @@
+---
+import Layout from "@/layouts/layout.astro";
+
+import bcrypt from "bcrypt";
+import { buildErrorResponse } from "@/lib/response";
+import { db } from "@/lib/db";
+import { users } from "db/schema";
+
+if (Astro.request.method != "POST") {
+  return buildErrorResponse("Only POST is supported", 400);
+}
+
+const formData = await Astro.request.formData();
+
+const login = formData.get("login");
+const password = formData.get("password");
+
+if (typeof login != "string" || typeof password != "string") {
+  return buildErrorResponse("Invalid form", 400);
+}
+
+const salt = await bcrypt.genSalt(10);
+const hash = await bcrypt.hash(password, salt);
+
+await db.insert(users).values({
+  login,
+  isAdmin: false,
+  password: hash
+});
+---
+
+<Layout>Пользователь успешно зарегистрирован. Теперь вы можете войти.</Layout>

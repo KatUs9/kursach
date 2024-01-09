@@ -1,0 +1,33 @@
+---
+import Layout from "@/layouts/layout.astro";
+
+import { authorize } from "@/lib/authorize";
+import { buildErrorResponse } from "@/lib/response";
+
+if (Astro.request.method != "POST") {
+  return buildErrorResponse("Only POST is supported", 400);
+}
+
+const formData = await Astro.request.formData();
+
+const login = formData.get("login");
+const password = formData.get("password");
+
+if (typeof login != "string" || typeof password != "string") {
+  return buildErrorResponse("Invalid form", 400);
+}
+
+const result = await authorize(login, password);
+
+if (result.success) {
+  Astro.cookies.set("auth-token", result.authToken, {
+    httpOnly: true,
+    maxAge: 12 * 60 * 60 * 1000, // 12h
+    sameSite: "strict"
+  });
+
+  return Astro.redirect("/");
+}
+---
+
+<Layout>{result.message}</Layout>

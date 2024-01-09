@@ -1,0 +1,1 @@
+ALTER TABLE "users" RENAME COLUMN "status" TO "is_admin";
