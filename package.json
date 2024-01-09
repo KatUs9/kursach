@@ -14,12 +14,12 @@
   "dependencies": {
     "@astrojs/check": "^0.3.4",
     "@astrojs/node": "^7.0.4",
-    "@astrojs/react": "^3.0.8",
-    "@astrojs/tailwind": "^5.0.4",
+    "@astrojs/react": "^3.0.9",
+    "@astrojs/tailwind": "^5.1.0",
     "@paralleldrive/cuid2": "^2.2.2",
-    "@types/react": "^18.2.45",
+    "@types/react": "^18.2.47",
     "@types/react-dom": "^18.2.18",
-    "astro": "^4.0.7",
+    "astro": "^4.1.1",
     "bcrypt": "^5.1.1",
     "dayjs": "^1.11.10",
     "dotenv": "^16.3.1",
@@ -30,7 +30,7 @@
     "probe-image-size": "^7.2.3",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "tailwindcss": "^3.4.0",
+    "tailwindcss": "^3.4.1",
     "tsx": "^4.7.0",
     "typescript": "^5.3.3",
     "zod": "^3.22.4"
@@ -42,8 +42,8 @@
     "@types/probe-image-size": "^7.2.4",
     "drizzle-kit": "^0.20.10",
     "prettier": "^3.1.1",
-    "prettier-plugin-astro": "^0.12.2",
-    "prettier-plugin-tailwindcss": "^0.5.9"
+    "prettier-plugin-astro": "^0.12.3",
+    "prettier-plugin-tailwindcss": "^0.5.11"
   },
   "packageManager": "pnpm@8.14.0"
 }

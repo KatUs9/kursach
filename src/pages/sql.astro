@@ -8,7 +8,7 @@ let executionResult:
   | {
       success: true;
       columns: string[];
-      data: unknown[];
+      data: unknown[][];
     }
   | { success: false; message: string }
   | undefined;
@@ -41,8 +41,6 @@ if (Astro.request.method == "POST") {
     throw error;
   }
 }
-
-console.log(executionResult);
 ---
 
 <Layout>
@@ -58,16 +56,30 @@ console.log(executionResult);
           Выполнить
         </button>
       </form>
-    ) : executionResult.success ? (
-      <table>
-        <thead>
-          {executionResult.columns.map((column) => (
-            <th>{column}</th>
-          ))}
-        </thead>
-      </table>
-    ) : (
-      <p>{executionResult.message}</p>
-    )
+    ) : null
+  }
+  {
+    executionResult != undefined ? (
+      executionResult.success ? (
+        <table>
+          <thead>
+            {executionResult.columns.map((column) => (
+              <th>{column}</th>
+            ))}
+          </thead>
+          <tbody>
+            {executionResult.data.map((row) => (
+              <tr>
+                {row.map((value) => (
+                  <td>{value}</td>
+                ))}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      ) : (
+        <p>{executionResult.message}</p>
+      )
+    ) : null
   }
 </Layout>
