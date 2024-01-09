@@ -2,8 +2,13 @@
 import Layout from "@/layouts/layout.astro";
 import { db } from "@/lib/db";
 import { getSession } from "@/lib/get-session";
+import { buildErrorResponse } from "@/lib/response";
 import { pets, reservations } from "db/schema";
 import { eq } from "drizzle-orm";
+
+if (Astro.request.method != "POST") {
+  return buildErrorResponse("Only POST is supported", 400);
+}
 
 const petId = Number(Astro.params.id!);
 

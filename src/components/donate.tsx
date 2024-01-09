@@ -19,7 +19,7 @@ const Donate: React.FC = () => {
       </button>
       {isOpened && (
         <div className="absolute bg-white p-2 text-black">
-          <form action="/api/donate" method="POST">
+          <form action="/donate" method="POST">
             <input
               name="firstName"
               className="border-0 bg-white bg-none text-black"
@@ -31,7 +31,7 @@ const Donate: React.FC = () => {
             <hr className="border-gray py-1" />
 
             <input
-              name="secondName"
+              name="lastName"
               className="border-0 bg-white bg-none text-black"
               placeholder="Фамилия"
               required
@@ -50,7 +50,7 @@ const Donate: React.FC = () => {
             <hr className="border-gray py-1" />
 
             <input
-              name="amount"
+              name="sum"
               className="border-0 bg-white bg-none text-black"
               placeholder="Сумма пожертвования"
               type="number"

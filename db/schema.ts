@@ -58,5 +58,5 @@ export const donations = pgTable("donations", {
   firstName: varchar("first_name", { length: 255 }).notNull(),
   lastName: varchar("last_name", { length: 255 }).notNull(),
   phoneNumber: varchar("phone_number", { length: 255 }).notNull(),
-  sum: numeric("sum", { scale: 2, precision: 20 })
+  sum: numeric("sum", { scale: 2, precision: 20 }).notNull()
 });

@@ -1,0 +1,1 @@
+ALTER TABLE "donations" ALTER COLUMN "sum" SET NOT NULL;

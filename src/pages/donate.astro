@@ -1,0 +1,36 @@
+---
+import Layout from "@/layouts/layout.astro";
+
+import { db } from "@/lib/db";
+import { buildErrorResponse } from "@/lib/response";
+import { donations } from "db/schema";
+
+if (Astro.request.method != "POST") {
+  return buildErrorResponse("Only POST is supported", 400);
+}
+
+const formData = await Astro.request.formData();
+
+const firstName = formData.get("firstName");
+const lastName = formData.get("lastName");
+const phoneNumber = formData.get("phoneNumber");
+const sum = formData.get("sum");
+
+if (
+  typeof firstName != "string" ||
+  typeof lastName != "string" ||
+  typeof phoneNumber != "string" ||
+  typeof sum != "string"
+) {
+  return buildErrorResponse("Invalid form", 400);
+}
+
+await db.insert(donations).values({
+  firstName,
+  lastName,
+  phoneNumber,
+  sum
+});
+---
+
+<Layout>Ваш запрос принят! Мы вам перезвоним для уточнения информации.</Layout>

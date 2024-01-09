@@ -9,7 +9,8 @@ const dbPets = await db
   .select()
   .from(pets)
   .innerJoin(images, eq(pets.imageId, images.id))
-  .leftJoin(reservations, eq(pets.id, reservations.petId));
+  .leftJoin(reservations, eq(pets.id, reservations.petId))
+  .orderBy(pets.id);
 
 function renderPetType(pet: typeof pets.$inferSelect) {
   switch (true) {
@@ -86,12 +87,11 @@ function declination(n: number, titles: string[]) {
             {reservations ? (
               <p class="text-green font-bold">Забронирован.</p>
             ) : (
-              <a
-                href={`/reserve/${pet.id}`}
-                class="bg-green text-white px-2 py-2 flex justify-center"
-              >
-                Забронировать визит
-              </a>
+              <form action={`/reserve/${pet.id}`} method="POST">
+                <button class="bg-green text-white px-2 py-2" type="submit">
+                  Забронировать визит
+                </button>
+              </form>
             )}
           </div>
         </li>
